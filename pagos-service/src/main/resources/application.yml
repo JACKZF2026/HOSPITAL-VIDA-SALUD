@@ -1,0 +1,41 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: pagos-service
+  r2dbc:
+    url: ${R2DBC_URL:r2dbc:h2:mem:///pagosdb?options=DB_CLOSE_DELAY=-1}
+    username: ${R2DBC_USER:sa}
+    password: ${R2DBC_PASSWORD:}
+  sql:
+    init:
+      mode: always
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    listener:
+      simple:
+        auto-startup: ${RABBITMQ_LISTENERS:true}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
+  instance:
+    prefer-ip-address: true
+
+management:
+  health:
+    rabbit:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+logging:
+  level:
+    pe.cibertec.vidasalud: INFO
