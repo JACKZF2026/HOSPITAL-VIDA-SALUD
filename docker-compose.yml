@@ -1,0 +1,36 @@
+version: "3.8"
+
+# Infraestructura opcional para desarrollo local.
+# Los microservicios funcionan con H2 en memoria por defecto; este compose
+# provee RabbitMQ (para demostrar los eventos reales) y PostgreSQL (perfil
+# 'postgres' opcional, ver README).
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: hospital-rabbitmq
+    ports:
+      - "5672:5672"     # AMQP
+      - "15672:15672"   # consola de administracion (guest/guest)
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-guest}
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: hospital-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-hospital}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hospital}
+      POSTGRES_DB: ${POSTGRES_DB:-vidasalud}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
