@@ -24,7 +24,7 @@ public enum EstadoCita {
         TRANSICIONES.put(PENDIENTE, EnumSet.of(CONFIRMADA, CANCELADA));
         TRANSICIONES.put(CONFIRMADA, EnumSet.of(ATENDIDA, CANCELADA, AUSENTE));
         TRANSICIONES.put(ATENDIDA, EnumSet.noneOf(EstadoCita.class));
-        TRANSICIONES.put(CANCELADA, EnumSet.noneOf(EstadoCita.class));
+        TRANSICIONES.put(CANCELADA, EnumSet.of(CONFIRMADA));
         TRANSICIONES.put(AUSENTE, EnumSet.noneOf(EstadoCita.class));
     }
 
